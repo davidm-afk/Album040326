@@ -2,22 +2,35 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nuestro álbum ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Nuestra historia 💞</title>
   <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#120b1a" />
+  <meta property="og:title" content="Tengo algo para ti 💌" />
+  <meta property="og:description" content="Un álbum de todos nuestros recuerdos." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💞</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@300;400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,700&family=Poppins:wght@300;400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body class="locked">
-  <!-- Fondo animado -->
-  <div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
-  <canvas id="hearts-bg" aria-hidden="true"></canvas>
-  <div class="cursor-glow" aria-hidden="true"></div>
+  <!-- ===== Precarga ===== -->
+  <div id="preloader" class="preloader">
+    <svg viewBox="0 0 100 90" class="pre-heart" aria-hidden="true">
+      <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#ff6b9d"/><stop offset=".5" stop-color="#c89bff"/><stop offset="1" stop-color="#ffc3a0"/></linearGradient></defs>
+      <path d="M50 82 C20 60 4 44 4 26 C4 13 14 4 26 4 C36 4 44 10 50 19 C56 10 64 4 74 4 C86 4 96 13 96 26 C96 44 80 60 50 82 Z" />
+    </svg>
+    <p>Preparando nuestros recuerdos…</p>
+  </div>
 
-  <!-- Pantalla de entrada -->
+  <!-- ===== Fondo ===== -->
+  <div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="grain" aria-hidden="true"></div>
+  <canvas id="hearts-bg" aria-hidden="true"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <!-- ===== Entrada ===== -->
   <section id="gate" class="gate">
     <div class="gate-card glass">
       <div class="envelope" id="envelope">
@@ -29,92 +42,142 @@
       </div>
       <h1 class="gate-title">Tengo algo para ti</h1>
       <form id="gate-form" class="gate-form" autocomplete="off">
-        <input id="gate-pass" type="password" inputmode="numeric" placeholder="Contraseña" aria-label="Contraseña" />
+        <input id="gate-pass" type="password" placeholder="Contraseña" aria-label="Contraseña" />
         <button class="btn" type="submit">Abrir ✨</button>
       </form>
       <p class="gate-hint" id="gate-hint"></p>
     </div>
   </section>
 
-  <!-- Navegación -->
+  <!-- ===== Navegación ===== -->
   <nav class="nav glass" id="nav">
-    <a href="#inicio" class="nav-logo">💞</a>
+    <a href="#inicio" class="nav-logo" aria-label="Inicio">💞</a>
     <div class="nav-links">
-      <a href="#album">Álbum</a>
-      <a href="#juegos">Juegos</a>
-      <a href="#carta">Carta</a>
+      <a href="#album" data-ico="📷">Álbum</a>
+      <a href="#razones" data-ico="💌">Razones</a>
+      <a href="#juegos" data-ico="🎮">Juegos</a>
+      <a href="#cupones" data-ico="🎟️">Cupones</a>
+      <a href="#carta" data-ico="✉️">Carta</a>
     </div>
-    <button class="music-btn" id="music-btn" title="Música" hidden>♫</button>
   </nav>
   <div class="progress" id="progress"></div>
 
+  <button class="music" id="music-btn" hidden aria-label="Música">
+    <span class="eq"><i></i><i></i><i></i><i></i></span>
+    <span class="music-title" id="music-title"></span>
+  </button>
+  <audio id="music" loop preload="none"></audio>
+
   <main id="app">
-    <!-- Portada -->
+    <!-- ===== Portada ===== -->
     <header id="inicio" class="hero">
-      <p class="hero-names" id="hero-names"></p>
-      <h1 class="hero-title" id="hero-title"></h1>
-      <p class="hero-sub" id="hero-sub"></p>
-      <div class="counter glass">
-        <div><strong id="c-days">0</strong><span>días</span></div>
-        <div><strong id="c-hours">0</strong><span>horas</span></div>
-        <div><strong id="c-min">0</strong><span>minutos</span></div>
-        <div><strong id="c-sec">0</strong><span>segundos</span></div>
+      <div class="hero-polaroids" id="hero-polaroids" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="hero-names" id="hero-names"></p>
+        <h1 class="hero-title" id="hero-title"></h1>
+        <p class="hero-sub" id="hero-sub"></p>
+        <div class="counter glass">
+          <div><strong id="c-days">0</strong><span>días</span></div>
+          <div><strong id="c-hours">00</strong><span>horas</span></div>
+          <div><strong id="c-min">00</strong><span>min</span></div>
+          <div><strong id="c-sec">00</strong><span>seg</span></div>
+        </div>
+        <p class="counter-label" id="next-month"></p>
       </div>
-      <p class="counter-label">...y contando 💗</p>
-      <a href="#album" class="scroll-down" aria-label="Bajar"><span></span></a>
+      <a href="#numeros" class="scroll-down" aria-label="Bajar"><span></span></a>
     </header>
 
-    <!-- Álbum por meses -->
-    <section id="album" class="album">
+    <!-- ===== En números ===== -->
+    <section id="numeros" class="stats">
       <div class="section-head reveal">
-        <span class="kicker">Mes a mes</span>
-        <h2>Nuestros recuerdos</h2>
+        <span class="kicker">Hasta hoy</span>
+        <h2>Nosotros, en números</h2>
       </div>
-      <div class="month-pills" id="month-pills"></div>
-      <div class="timeline" id="timeline"></div>
+      <div class="stats-grid" id="stats-grid"></div>
     </section>
 
-    <!-- Juegos -->
+    <!-- ===== Álbum ===== -->
+    <section id="album" class="album">
+      <div class="section-head reveal">
+        <span class="kicker">Capítulo a capítulo</span>
+        <h2>Nuestros recuerdos</h2>
+        <p class="section-sub">Toca cualquier foto para verla en grande, o míralas todas como película.</p>
+        <button class="btn" id="play-all">▶ Ver nuestra película</button>
+      </div>
+      <div class="month-pills" id="month-pills"></div>
+      <div class="chapters" id="chapters"></div>
+    </section>
+
+    <!-- ===== Razones ===== -->
+    <section id="razones" class="reasons">
+      <div class="section-head reveal">
+        <span class="kicker">Desliza las cartas</span>
+        <h2>Razones por las que te quiero</h2>
+      </div>
+      <div class="deck-wrap reveal">
+        <div class="deck" id="deck"></div>
+        <div class="deck-controls">
+          <button class="round-btn" id="deck-prev" aria-label="Anterior">←</button>
+          <span id="deck-count">1 / 1</span>
+          <button class="round-btn" id="deck-next" aria-label="Siguiente">→</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Juegos ===== -->
     <section id="juegos" class="games">
       <div class="section-head reveal">
-        <span class="kicker">Un ratito de juego</span>
+        <span class="kicker">Hora de jugar</span>
         <h2>Minijuegos</h2>
       </div>
-      <div class="game-tabs reveal">
-        <button class="tab active" data-game="memory">🃏 Memoria</button>
+      <div class="game-tabs reveal" role="tablist">
+        <button class="tab active" data-game="fotoquiz">📸 Quiz de fotos</button>
         <button class="tab" data-game="quiz">💭 ¿Cuánto me conoces?</button>
+        <button class="tab" data-game="memory">🃏 Memoria</button>
         <button class="tab" data-game="catch">💘 Atrapa corazones</button>
       </div>
 
-      <div class="game-panel glass active" id="game-memory">
+      <div class="game-panel glass active" id="game-fotoquiz"><div class="qz" id="fotoquiz"></div></div>
+      <div class="game-panel glass" id="game-quiz"><div class="qz" id="quiz"></div></div>
+
+      <div class="game-panel glass" id="game-memory">
         <div class="game-bar">
-          <span>Movimientos: <b id="mem-moves">0</b></span>
-          <span>Parejas: <b id="mem-pairs">0</b></span>
+          <span>⏱ <b id="mem-time">0:00</b></span>
+          <span>Movimientos <b id="mem-moves">0</b></span>
+          <span>Parejas <b id="mem-pairs">0/8</b></span>
           <button class="btn btn-sm" id="mem-reset">Reiniciar</button>
         </div>
         <div class="memory-grid" id="memory-grid"></div>
-      </div>
-
-      <div class="game-panel glass" id="game-quiz">
-        <div class="quiz" id="quiz"></div>
+        <p class="game-record" id="mem-record"></p>
       </div>
 
       <div class="game-panel glass" id="game-catch">
         <div class="game-bar">
-          <span>Puntos: <b id="catch-score">0</b></span>
-          <span>Tiempo: <b id="catch-time">30</b>s</span>
+          <span>Puntos <b id="catch-score">0</b></span>
+          <span>⏱ <b id="catch-time">30</b>s</span>
           <button class="btn btn-sm" id="catch-start">Empezar</button>
         </div>
         <div class="catch-wrap">
           <canvas id="catch-canvas"></canvas>
           <div class="catch-overlay" id="catch-overlay">
-            <p>Mueve la cesta con el ratón o el dedo y atrapa todos los corazones 💖<br>¡Cuidado con los corazones rotos 💔!</p>
+            <div><h3>Atrapa corazones</h3><p>Mueve la canasta con el mouse o el dedo.<br>❤️ +1 &nbsp; 💖 +3 &nbsp; 💔 −3</p></div>
           </div>
         </div>
+        <p class="game-record" id="catch-record"></p>
       </div>
     </section>
 
-    <!-- Carta -->
+    <!-- ===== Cupones ===== -->
+    <section id="cupones" class="coupons">
+      <div class="section-head reveal">
+        <span class="kicker">Rasca con el dedo</span>
+        <h2>Cupones canjeables</h2>
+        <p class="section-sub">Válidos para siempre. Solo tienes que enseñármelos 😌</p>
+      </div>
+      <div class="coupon-grid" id="coupon-grid"></div>
+    </section>
+
+    <!-- ===== Carta ===== -->
     <section id="carta" class="letter-section">
       <div class="section-head reveal">
         <span class="kicker">Para terminar</span>
@@ -124,20 +187,43 @@
         <div class="letter-paper">
           <div id="letter-text" class="letter-text"></div>
           <p class="letter-sign" id="letter-sign"></p>
+          <div class="wax" aria-hidden="true">❤</div>
         </div>
       </div>
-      <button class="btn big-heart" id="big-heart">Te quiero ❤️</button>
     </section>
 
-    <footer class="footer">Hecho con ❤️ para ti</footer>
+    <!-- ===== Final ===== -->
+    <section id="final" class="final">
+      <div class="final-card glass reveal" id="final-card">
+        <div class="final-emoji">💍</div>
+        <h2 id="final-q"></h2>
+        <div class="final-btns" id="final-btns">
+          <button class="btn final-yes" id="final-yes"></button>
+          <button class="btn-ghost final-no" id="final-no"></button>
+        </div>
+      </div>
+      <div class="final-msg" id="final-msg" hidden>
+        <h2 id="final-text"></h2>
+        <p id="final-sub"></p>
+        <button class="btn" id="final-again">Otra vez 🎆</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Hecho con muchísimo ❤️ por <span id="foot-name"></span></p>
+      <p class="footer-small">Tip: haz doble clic en cualquier lado 😉</p>
+    </footer>
   </main>
 
-  <!-- Lightbox -->
+  <!-- ===== Visor de fotos ===== -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lb-close" id="lb-close" aria-label="Cerrar">✕</button>
+    <div class="lb-top">
+      <span class="lb-counter" id="lb-counter"></span>
+      <button class="round-btn" id="lb-close" aria-label="Cerrar">✕</button>
+    </div>
     <button class="lb-nav lb-prev" id="lb-prev" aria-label="Anterior">‹</button>
     <figure class="lb-figure">
-      <div class="lb-img-wrap"><img id="lb-img" alt="" /></div>
+      <div class="lb-media" id="lb-media"></div>
       <figcaption>
         <span class="lb-date" id="lb-date"></span>
         <h3 id="lb-title"></h3>
@@ -147,10 +233,24 @@
     <button class="lb-nav lb-next" id="lb-next" aria-label="Siguiente">›</button>
   </div>
 
-  <audio id="music" loop></audio>
+  <!-- ===== Modo película ===== -->
+  <div class="movie" id="movie" aria-hidden="true">
+    <div class="movie-bar"><div id="movie-progress"></div></div>
+    <div class="movie-stage" id="movie-stage"></div>
+    <div class="movie-caption" id="movie-caption"></div>
+    <div class="movie-controls">
+      <button class="round-btn" id="mv-prev" aria-label="Anterior">⏮</button>
+      <button class="round-btn" id="mv-play" aria-label="Pausa">⏸</button>
+      <button class="round-btn" id="mv-next" aria-label="Siguiente">⏭</button>
+      <button class="round-btn" id="mv-close" aria-label="Cerrar">✕</button>
+    </div>
+  </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
+  <script src="datos/album.js"></script>
+  <script src="js/fotos.js" onerror="window.FOTOS=null"></script>
+  <script src="js/core.js"></script>
+  <script src="js/album.js"></script>
   <script src="js/games.js"></script>
+  <script src="js/extras.js"></script>
 </body>
 </html>
