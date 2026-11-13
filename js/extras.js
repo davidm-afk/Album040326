@@ -114,7 +114,7 @@
       for (let n = 0; n < 60; n++) { ctx.font = `${8 + Math.random() * 10}px serif`; ctx.fillText(Math.random() < .5 ? "✦" : "♥", Math.random() * w, Math.random() * h); }
       ctx.fillStyle = "#7a4a12"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.font = "600 20px Poppins"; ctx.fillText("Rasca aquí ✨", w / 2, h / 2 - 8);
-      ctx.font = "400 13px Poppins"; ctx.fillText(`Cupón sorpresa #${k + 1}`, w / 2, h / 2 + 18);
+      ctx.font = "400 13px Poppins"; ctx.fillText(isTouch ? "Pasa el dedo de lado a lado" : `Cupón sorpresa #${k + 1}`, w / 2, h / 2 + 18);
     }
     paint();
     const pos = (e) => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
@@ -140,6 +140,7 @@
     cv.addEventListener("pointerdown", (e) => { down = true; lastP = null; cv.setPointerCapture(e.pointerId); rub(e); });
     cv.addEventListener("pointermove", (e) => down && rub(e));
     cv.addEventListener("pointerup", () => { down = false; check(); });
+    cv.addEventListener("pointercancel", () => { down = false; lastP = null; });
     addEventListener("resize", () => { if (!el.classList.contains("revealed")) paint(); });
   }
 })();

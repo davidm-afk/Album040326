@@ -185,7 +185,9 @@ function QuizGame(root, cfg) {
       ${q.comentario ? `<div class="qz-bubble">💬 ${esc(q.comentario)}</div>` : ""}
       <button class="btn" id="qz-next">${i === Q.length - 1 ? "Ver resultado 🏁" : "Siguiente →"}</button>`;
     fb.classList.add("show");
-    $("#qz-next", root).onclick = () => { i++; render(); root.scrollIntoView({ behavior: "smooth", block: "center" }); };
+    // En celular la respuesta queda abajo: la acercamos a la vista
+    setTimeout(() => { const r = fb.getBoundingClientRect(); if (r.bottom > innerHeight - 90) fb.scrollIntoView({ behavior: "smooth", block: "end" }); }, 450);
+    $("#qz-next", root).onclick = () => { i++; render(); root.closest(".game-panel").scrollIntoView({ behavior: "smooth", block: "start" }); };
   }
   const mult = (ok) => (ok ? 1 + 0.25 * Math.min(streak, 4) : 1);
 

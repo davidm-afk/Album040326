@@ -88,6 +88,8 @@ En 1–2 minutos está en línea. Puedes ver el progreso en la pestaña **Action
 
 ### 💡 Detalles
 
+- **Hecha para el celular primero:** menú tipo app abajo que se esconde al bajar, fotos en cuadrícula, el visor se cierra deslizando hacia abajo, los cupones se rascan de lado a lado y los juegos se controlan con el dedo. También se adapta a laptop, tablet y celular acostado.
+
 - La contraseña es decorativa: el repositorio es público, así que **cualquiera con el enlace puede ver las fotos**. No subas nada que no quieras que se vea.
 - Los récords de los juegos y los cupones ya rascados se guardan en el navegador de ella.
 - Atajos: en el visor de fotos y en el modo película funcionan las flechas ← → y `Esc`. Doble clic en cualquier parte = lluvia de corazones.

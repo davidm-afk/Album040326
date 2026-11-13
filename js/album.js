@@ -128,12 +128,20 @@ const Lightbox = (() => {
     if (e.key === "ArrowLeft") show(idx - 1, -1);
     if (e.key === "ArrowRight") show(idx + 1, 1);
   });
-  lb.addEventListener("touchstart", (e) => (tx = e.touches[0].clientX), { passive: true });
+  let ty = null;
+  lb.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  lb.addEventListener("touchmove", (e) => {
+    if (tx === null || e.touches.length > 1) return;
+    const dy = e.touches[0].clientY - ty, dx = e.touches[0].clientX - tx;
+    if (dy > 0 && Math.abs(dy) > Math.abs(dx)) { $(".lb-figure", lb).style.transform = `translateY(${dy * .6}px) scale(${1 - Math.min(dy, 300) / 1500})`; lb.style.backgroundColor = `rgba(8,3,12,${.94 - Math.min(dy, 300) / 600})`; }
+  }, { passive: true });
   lb.addEventListener("touchend", (e) => {
     if (tx === null) return;
-    const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
-    tx = null;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    $(".lb-figure", lb).style.transform = ""; lb.style.backgroundColor = "";
+    if (dy > 110 && dy > Math.abs(dx)) close();
+    else if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    tx = ty = null;
   });
   return { open };
 })();

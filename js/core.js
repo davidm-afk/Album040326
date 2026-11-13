@@ -84,6 +84,8 @@ function makeMedia(it, { thumb = false, autoplay = false, controls = false } = {
     const v = document.createElement("video");
     v.src = it.src + (controls ? "" : "#t=0.1");
     v.muted = !controls; v.loop = !controls; v.playsInline = true; v.preload = "metadata";
+    v.setAttribute("playsinline", ""); v.setAttribute("webkit-playsinline", "");
+    if (!controls) v.setAttribute("muted", "");
     if (controls) { v.controls = true; v.autoplay = true; }
     if (autoplay) v.dataset.autoplay = "1";
     return v;
@@ -121,6 +123,15 @@ function burst(x, y, n = 24, set = ["💖", "💗", "💕", "❤️", "💘", "�
 }
 const burstAt = (el, n) => { const r = el.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, n); };
 document.addEventListener("dblclick", (e) => { if (!e.target.closest("button, input, .lightbox, .movie")) burst(e.clientX, e.clientY, 14); });
+if (isTouch) {
+  let lastTap = { t: 0, x: 0, y: 0 };
+  document.addEventListener("touchend", (e) => {
+    const t = e.changedTouches[0], now = Date.now();
+    if (e.target.closest("button, input, a, canvas, .card, .rcard, .mcard, .lightbox, .movie, .qz")) return;
+    if (now - lastTap.t < 320 && Math.hypot(t.clientX - lastTap.x, t.clientY - lastTap.y) < 40) { burst(t.clientX, t.clientY, 14); lastTap.t = 0; }
+    else lastTap = { t: now, x: t.clientX, y: t.clientY };
+  }, { passive: true });
+}
 
 /* ---------- Aparecer al hacer scroll ---------- */
 const revealIO = new IntersectionObserver((entries) => {
@@ -254,6 +265,7 @@ const Music = (() => {
     if (!ALBUM.password || sessionStorage.getItem("album-ok")) { gateEl.remove(); enter(); return; }
     gateEl.classList.add("show");
     hint.textContent = ALBUM.pista || "";
+    if (/^\d+$/.test(String(ALBUM.password))) { input.inputMode = "numeric"; input.pattern = "[0-9]*"; }
     setTimeout(() => input.focus(), 700);
     let tries = 0;
     form.addEventListener("submit", (e) => {
@@ -289,6 +301,7 @@ function hero() {
   $("#hero-names").textContent = `${ALBUM.yo} & ${ALBUM.ella}`;
   $("#hero-sub").textContent = ALBUM.subtituloPortada || "";
   $("#foot-name").textContent = ALBUM.yo;
+  if (isTouch) $(".footer-small").textContent = "Tip: toca dos veces en cualquier lado 😉";
   let n = 0;
   $("#hero-title").innerHTML = (ALBUM.tituloPortada || "Nuestra historia").split(" ").map((w) =>
     `<span class="word">${[...w].map((c) => `<span class="ch" style="animation-delay:${.25 + n++ * .055}s">${esc(c)}</span>`).join("")}</span>`
@@ -347,10 +360,15 @@ function hero() {
 }
 
 /* ---------- Navegación y barra de progreso ---------- */
+let lastY = 0;
 addEventListener("scroll", () => {
   const p = scrollY / (document.documentElement.scrollHeight - innerHeight);
   $("#progress").style.transform = `scaleX(${p})`;
-  $("#nav").classList.toggle("scrolled", scrollY > 40);
+  const nav = $("#nav");
+  nav.classList.toggle("scrolled", scrollY > 40);
+  // En celular el menú se esconde al bajar y vuelve al subir (más espacio para las fotos)
+  const dy = scrollY - lastY;
+  if (Math.abs(dy) > 8) { nav.classList.toggle("hide", dy > 0 && scrollY > 300); lastY = scrollY; }
 }, { passive: true });
 (() => {
   const links = $$(".nav-links a");
