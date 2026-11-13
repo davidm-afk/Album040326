@@ -8,6 +8,8 @@ const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { co
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const isTouch = matchMedia("(hover: none)").matches;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Vibración cortita (Android). El iPhone no permite vibrar desde una página web, ahí simplemente no hace nada.
+const buzz = (p) => { try { navigator.vibrate?.(p); } catch {} };
 const store = {
   get: (k, d) => { try { return JSON.parse(localStorage.getItem("album:" + k)) ?? d; } catch { return d; } },
   set: (k, v) => { try { localStorage.setItem("album:" + k, JSON.stringify(v)); } catch {} },
@@ -272,6 +274,7 @@ const Music = (() => {
       e.preventDefault();
       if (input.value.trim().toLowerCase() === String(ALBUM.password).toLowerCase()) {
         input.blur();
+        buzz([30, 60, 30]);
         env.classList.add("opened");
         Music.play();
         sessionStorage.setItem("album-ok", "1");
@@ -279,6 +282,7 @@ const Music = (() => {
         setTimeout(() => gateEl.remove(), 2600);
       } else {
         tries++;
+        buzz([60, 40, 60]);
         const card = $(".gate-card");
         card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
         hint.textContent = ["Mmm… casi 😅", "Nop 🙈 piénsalo bien", "Te doy una pista extra: es el día que nos conocimos 💫"][Math.min(tries - 1, 2)] + (tries < 3 ? " " + (ALBUM.pista || "") : "");

@@ -174,6 +174,7 @@ function QuizGame(root, cfg) {
     score += pts;
     log.push({ q, ok, pts });
 
+    buzz(ok ? 35 : [50, 40, 50]);
     if (ok) { const el = btn || $(".qz-date-label", root) || root; burstAt(el, 14); }
     else root.querySelector(".qz-body")?.classList.add("shake-soft");
     animatePoints(score - pts, score);
@@ -186,7 +187,10 @@ function QuizGame(root, cfg) {
       <button class="btn" id="qz-next">${i === Q.length - 1 ? "Ver resultado 🏁" : "Siguiente →"}</button>`;
     fb.classList.add("show");
     // En celular la respuesta queda abajo: la acercamos a la vista
-    setTimeout(() => { const r = fb.getBoundingClientRect(); if (r.bottom > innerHeight - 90) fb.scrollIntoView({ behavior: "smooth", block: "end" }); }, 450);
+    setTimeout(() => {
+      const r = fb.getBoundingClientRect(), extra = r.bottom - (innerHeight - 24);
+      if (extra > 0) scrollBy({ top: extra, behavior: "smooth" });
+    }, 200);
     $("#qz-next", root).onclick = () => { i++; render(); root.closest(".game-panel").scrollIntoView({ behavior: "smooth", block: "start" }); };
   }
   const mult = (ok) => (ok ? 1 + 0.25 * Math.min(streak, 4) : 1);
@@ -307,7 +311,7 @@ Games.memory = (function memory() {
     if (first.dataset.key === el.dataset.key) {
       first.classList.add("done"); el.classList.add("done");
       found++; pairsEl.textContent = `${found}/${PAIRS}`;
-      burstAt(el, 8);
+      burstAt(el, 8); buzz(25);
       first = null;
       if (found === PAIRS) {
         clearInterval(timer);
@@ -403,7 +407,7 @@ Games.catch = (function () {
       it.y += it.v * dt; it.a += dt * 4;
       if (it.y > by - 8 && it.y < by + 22 && Math.abs(it.x - basket.x) < basket.w / 2 + 6) {
         let pts = 0, label;
-        if (it.type === "bad") { pts = -3; combo = 0; shake = 10; label = "-3 💔"; }
+        if (it.type === "bad") { pts = -3; combo = 0; shake = 10; label = "-3 💔"; buzz(70); }
         else if (it.type === "clock") { time += 5; timeEl.textContent = time; label = "+5 s ⏰"; }
         else { combo++; pts = (it.type === "gold" ? 3 : 1) * (combo >= 10 ? 2 : 1); label = "+" + pts; }
         score = Math.max(0, score + pts);

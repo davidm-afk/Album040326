@@ -21,7 +21,7 @@ const FOTOS = path.join(ROOT, "fotos");
 const IMG = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".tif", ".tiff"]);
 const VID = new Set([".mp4", ".webm", ".mov", ".m4v"]);
 const HEIC = new Set([".heic", ".heif"]);
-const COPY = ["index.html", "css", "js", "datos", "musica"];
+const COPY = ["index.html", "manifest.webmanifest", "icons", "css", "js", "datos", "musica"];
 
 const log = (...a) => console.log(...a);
 const warn = (...a) => console.warn("⚠️ ", ...a);

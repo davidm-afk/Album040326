@@ -86,6 +86,14 @@ En 1–2 minutos está en línea. Puedes ver el progreso en la pestaña **Action
 
 ---
 
+## 📱 Ponerla como app en su celular
+
+Probada para **iPhone 12** y **Samsung Galaxy A56**. Se puede dejar en la pantalla de inicio con su propio ícono 💗, y se abre a pantalla completa como si fuera una app:
+
+- **iPhone (Safari):** abrir el enlace → botón **Compartir** (cuadrito con flecha) → **Agregar a inicio** → *Agregar*.
+- **Galaxy (Samsung Internet):** abrir el enlace → menú **≡** abajo → **Agregar página a** → **Pantalla de inicio**.
+- **Galaxy (Chrome):** abrir el enlace → menú **⋮** → **Agregar a la pantalla principal** → *Instalar*.
+
 ### 💡 Detalles
 
 - **Hecha para el celular primero:** menú tipo app abajo que se esconde al bajar, fotos en cuadrícula, el visor se cierra deslizando hacia abajo, los cupones se rascan de lado a lado y los juegos se controlan con el dedo. También se adapta a laptop, tablet y celular acostado.

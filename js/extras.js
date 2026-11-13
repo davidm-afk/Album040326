@@ -44,6 +44,7 @@
     c.style.transform = `translate(${dir * 140}%, -10%) rotate(${dir * 30}deg)`;
     c.style.opacity = 0;
     if (dir > 0) burstAt(c, 6);
+    buzz(12);
     setTimeout(() => { i++; build(); }, 280);
   }
 
@@ -135,7 +136,7 @@
     function finish() {
       el.classList.add("revealed");
       done.add(k); store.set("cupones", [...done]);
-      burstAt(el, 18);
+      burstAt(el, 18); buzz([20, 40, 80]);
     }
     cv.addEventListener("pointerdown", (e) => { down = true; lastP = null; cv.setPointerCapture(e.pointerId); rub(e); });
     cv.addEventListener("pointermove", (e) => down && rub(e));
@@ -185,7 +186,14 @@
     // Se mueve a un lugar al azar, pero siempre dentro de la tarjeta
     if (!home) { const b0 = no.getBoundingClientRect(), c0 = card.getBoundingClientRect(); home = { x: b0.left - c0.left, y: b0.top - c0.top, w: b0.width, h: b0.height }; }
     const cw = card.clientWidth, chh = card.clientHeight;
-    const tx = 12 + Math.random() * Math.max(0, cw - home.w - 24), ty = 12 + Math.random() * Math.max(0, chh - home.h - 24);
+    // Nunca debajo del botón "Sí" (en celular quedaría tapado)
+    const c0 = card.getBoundingClientRect(), y0 = yes.getBoundingClientRect();
+    const ys = { l: y0.left - c0.left - 10, r: y0.right - c0.left + 10, t: y0.top - c0.top - 10, b: y0.bottom - c0.top + 10 };
+    let tx, ty, tries = 0;
+    do {
+      tx = 12 + Math.random() * Math.max(0, cw - home.w - 24);
+      ty = 12 + Math.random() * Math.max(0, chh - home.h - 24);
+    } while (tries++ < 30 && tx < ys.r && tx + home.w > ys.l && ty < ys.b && ty + home.h > ys.t);
     no.style.transform = `translate(${tx - home.x}px, ${ty - home.y}px) rotate(${(Math.random() - .5) * 24}deg)`;
     if (n > 6) { no.style.opacity = 0; no.style.pointerEvents = "none"; }
   }
@@ -203,6 +211,7 @@
       requestAnimationFrame(() => msg.classList.add("show"));
     }, 400);
     FX.fireworks(9000);
+    buzz([40, 60, 40, 60, 160]);
     const r = yes.getBoundingClientRect();
     burst(r.left + r.width / 2, r.top + r.height / 2, 50);
     Music.ensure();

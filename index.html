@@ -6,6 +6,15 @@
   <title>Nuestra historia 💞</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#120b1a" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="format-detection" content="telephone=no" />
+  <!-- Para agregarla a la pantalla de inicio como si fuera una app -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Nosotros" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <meta property="og:title" content="Tengo algo para ti 💌" />
   <meta property="og:description" content="Un álbum de todos nuestros recuerdos." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💞</text></svg>" />
@@ -42,7 +51,7 @@
       </div>
       <h1 class="gate-title">Tengo algo para ti</h1>
       <form id="gate-form" class="gate-form" autocomplete="off">
-        <input id="gate-pass" type="password" placeholder="Contraseña" aria-label="Contraseña" />
+        <input id="gate-pass" type="text" class="secret" placeholder="Contraseña" aria-label="Contraseña" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" />
         <button class="btn" type="submit">Abrir ✨</button>
       </form>
       <p class="gate-hint" id="gate-hint"></p>

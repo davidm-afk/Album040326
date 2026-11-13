@@ -2,6 +2,7 @@
    ESTILOS — Paleta y tipografías arriba por si quieres cambiarlas
    ===================================================================== */
 :root {
+  color-scheme: dark;
   --bg: #120b1a;
   --bg2: #1e1029;
   --pink: #ff6b9d;
@@ -36,6 +37,9 @@ body.locked { overflow: hidden; height: 100vh; height: 100svh; }
 body.locked #app, body.locked .nav, body.locked .progress, body.locked .music { visibility: hidden; }
 img, video { display: block; max-width: 100%; }
 [hidden] { display: none !important; }
+.secret { -webkit-text-security: disc; text-security: disc; }
+.rcard, .mcard, .qz-photo, .coupon, .catch-wrap, .deck, .polaroid { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.rcard img, .mcard img, .qz-photo img, .polaroid img, .card img { -webkit-user-drag: none; }
 .emo { -webkit-text-fill-color: initial; color: initial; background: none; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
